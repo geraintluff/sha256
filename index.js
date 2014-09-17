@@ -1,4 +1,13 @@
-function sha256(ascii) {
+(function (global, factory) {
+	if (typeof define === 'function' && define.amd) {
+		define([], factory);
+	} else if (typeof module !== 'undefined' && module.exports){
+		module.exports = factory();
+	} else {
+		global.sha256 = factory();
+	}
+})(this, function () {
+	function sha256(ascii) {
 	var maxWord = 0xffffffff;
 	var rightRotate = function(value, amount) {
 		return (value>>>amount) | (value<<(32 - amount));
@@ -73,3 +82,6 @@ function sha256(ascii) {
 		return hex(word>>24) + hex(word>>16) + hex(word>>8) + hex(word);
 	}).join('');
 }
+	
+	return sha256;
+});
