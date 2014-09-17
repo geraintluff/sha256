@@ -7,7 +7,7 @@
 		global.sha256 = factory();
 	}
 })(this, function () {
-	{{code}}
+	{{sha256.js}}
 	
 	return sha256;
 });
