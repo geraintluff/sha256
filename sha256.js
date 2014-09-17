@@ -8,21 +8,6 @@
 	}
 })(this, function () {
 	function sha256(ascii) {
-		var hex = function (byte) {
-			byte = (byte&255).toString(16);
-			return (0 + byte).substring(byte.length - 1);
-		};
-		var wordToHex = function (word) {
-			return hex(word>>24) + hex(word>>16) + hex(word>>8) + hex(word);
-		};
-		var binary = function (word) {
-			var result = '';
-			for (var i = 0; i < 32; i++) {
-				result += ((word>>(31 - i))&1) ? '1' : '0';
-			}
-			return result;
-		}
-
 		// Initialize hash values:
 		// (first 32 bits of the fractional parts of the square roots of the first 8 primes 2..19):
 		var hash = [0x6a09e667, 0xbb67ae85, 0x3c6ef372, 0xa54ff53a, 0x510e527f, 0x9b05688c, 0x1f83d9ab, 0x5be0cd19];
