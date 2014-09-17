@@ -60,14 +60,11 @@
 			var rightRotate = function(value, amount) {
 				return (value>>>amount) | (value<<(32 - amount));
 			};
-			var wrap = function (value) {
-				return value&maxWord; // TODO: replace all these with just value|0 ?
-			}
 			for (var i = 16; i < 64; i++) {
 				var w15 = w[i - 15], w2 = w[i - 2];
 				var s0 = rightRotate(w15, 7) ^ rightRotate(w15, 18) ^ (w15>>>3);
 				var s1 = rightRotate(w2, 17) ^ rightRotate(w2, 19) ^ (w2>>>10);
-				w[i] = wrap(w[i - 16] + s0 + w[i - 7] + s1);
+				w[i] = (w[i - 16] + s0 + w[i - 7] + s1)|0;
 			}
 			
 			var working = hash.slice(0);
@@ -75,17 +72,17 @@
 				var a = working[0], e = working[4];
 				var s1 = rightRotate(e, 6) ^ rightRotate(e, 11) ^ rightRotate(e, 25);
 				var ch = (e&working[5])^((~e)&working[6]);
-				var temp1 = wrap(working[7] + s1 + ch + k[i] + w[i]); // TODO: this wrap() seems unnecessary
+				var temp1 = working[7] + s1 + ch + k[i] + w[i]
 				var s0 = rightRotate(a, 2) ^ rightRotate(a, 13) ^ rightRotate(a, 22);
 				var maj = (a&working[1])^(a&working[2])^(working[1]&working[2]);
 				var temp2 = s0 + maj;
 				
-				working = [wrap(temp1 + temp2)].concat(working.slice(0, 7)); // this slice is probably not needed?
-				working[4] = wrap(working[4] + temp1);
+				working = [(temp1 + temp2)|0].concat(working.slice(0, 7)); // this slice is probably not needed?
+				working[4] = (working[4] + temp1)|0;
 			}
 			
 			for (var i = 0; i < 8; i++) {
-				hash[i] = wrap(hash[i] + working[i]);
+				hash[i] = (hash[i] + working[i])|0;
 			}
 		}
 		
