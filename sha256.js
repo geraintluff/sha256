@@ -55,9 +55,7 @@
 		
 		// process each chunk
 		while (words.length) {
-			console.log('starting hash: \n\t' + hash.map(wordToHex).join('\n\t').toUpperCase());
 			var w = words.splice(0, 16);
-			console.log('chunk: \n\t' + w.map(wordToHex).join('\n\t').toUpperCase());
 			// Right rotate
 			var rightRotate = function(value, amount) {
 				return (value>>>amount) | (value<<(32 - amount));
@@ -72,10 +70,8 @@
 				w[i] = wrap(w[i - 16] + s0 + w[i - 7] + s1);
 			}
 			
-			//var a = hash[0], b = hash[1], c = hash[2], d = hash[3], e = hash[4], f = hash[5], g = hash[6], h = hash[7];
 			var working = hash.slice(0);
 			for (var i = 0; i < 64; i++) {
-				//*
 				var a = working[0], e = working[4];
 				var s1 = rightRotate(e, 6) ^ rightRotate(e, 11) ^ rightRotate(e, 25);
 				var ch = (e&working[5])^((~e)&working[6]);
@@ -83,30 +79,9 @@
 				var s0 = rightRotate(a, 2) ^ rightRotate(a, 13) ^ rightRotate(a, 22);
 				var maj = (a&working[1])^(a&working[2])^(working[1]&working[2]);
 				var temp2 = s0 + maj;
-				console.log([w[i], k[i], s1, ch, temp1, s0, maj, temp2].map(wordToHex).join('_'));
 				
 				working = [wrap(temp1 + temp2)].concat(working.slice(0, 7)); // this slice is probably not needed?
 				working[4] = wrap(working[4] + temp1);
-				console.log('working ' + i + ': ' + working.slice(0, 8).map(wordToHex).join('  ').toUpperCase());
-				/*/
-				var s1 = rr(e, 6)^rr(e, 11)^rr(e, 25);
-				var ch = (e&f)^((~e)&g);
-				var temp1 = wrap(h + s1 + ch + k[i] + w[i]);
-				var s0 = rr(a, 2)^rr(a, 13)^rr(a, 22);
-				var maj = (a&b)^(a&c)^(b&c);
-				var temp2 = s0 + maj;
-				console.log(s1, ch, temp1, s0, maj, temp2);
-				
-				h = g;
-				g = f;
-				f = e;
-				e = wrap(d + temp1);
-				d = c;
-				c = b;
-				b = a;
-				a = wrap(temp1 + temp2);
-				console.log('working ' + i + ': ' + [a, b, c, d, e, f, g, h].map(wordToHex).join('  ').toUpperCase());
-				/*/
 			}
 			
 			for (var i = 0; i < 8; i++) {
