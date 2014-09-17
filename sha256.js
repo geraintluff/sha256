@@ -24,11 +24,9 @@
 			}
 			return result;
 		}
-		// Initialize hash values:
-		// (first 32 bits of the fractional parts of the square roots of the first 8 primes 2..19):
+		// Initial hash value: first 32 bits of the fractional parts of the square roots of the first 8 primes
 		var hash = (sha256.h = sha256.h || constants(8, 1/2)).slice(0);
-		// Initialize array of round constants:
-		// (first 32 bits of the fractional parts of the cube roots of the first 64 primes 2..311):
+		// Round constants: first 32 bits of the fractional parts of the cube roots of the first 64 primes
 		var k = (sha256.k = sha256.k || constants(64, 1/3));
 		
 		var words = [];
@@ -66,7 +64,7 @@
 				var maj = (a&working[1])^(a&working[2])^(working[1]&working[2]);
 				var temp2 = s0 + maj;
 				
-				working = [(temp1 + temp2)|0].concat(working.slice(0, 7)); // this slice is probably not needed?
+				working = [(temp1 + temp2)|0].concat(working); // We don't bother trimming off the extra ones, they're harmless
 				working[4] = (working[4] + temp1)|0;
 			}
 			
@@ -75,9 +73,9 @@
 			}
 		}
 		
-		var hex = function (byte) {
-			byte = (byte&255).toString(16);
-			return (0 + byte).substring(byte.length - 1);
+		var hex = function (b) {
+			b = (b&255);
+			return ((b < 16) ? '0' : '') + b.toString(16);
 		};
 		return hash.map(function (word) {
 			return hex(word>>24) + hex(word>>16) + hex(word>>8) + hex(word);
