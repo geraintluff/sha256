@@ -31,7 +31,7 @@ module.exports = function (grunt) {
 	
 	grunt.registerTask('measure', function () {
 		var fs = require('fs');
-		var code = fs.readFileSync('sha256.js');
+		var code = fs.readFileSync('sha256.min.js');
 		console.log('Minified length: ' + code.length + ' bytes');
 	});
 	

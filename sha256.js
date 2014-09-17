@@ -46,7 +46,6 @@
 		// process each chunk
 		while (words.length) {
 			var w = words.splice(0, 16);
-			// Right rotate
 			var rightRotate = function(value, amount) {
 				return (value>>>amount) | (value<<(32 - amount));
 			};
