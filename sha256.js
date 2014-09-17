@@ -9,7 +9,6 @@
 })(this, function () {
 	function sha256(ascii) {
 		var maxWord = 0xffffffff;
-		var mathPow = Math.pow;
 		function constants(N, pow) {
 			var primes = [], result = [];
 			var candidate = 2;
@@ -20,7 +19,7 @@
 						candidate++;
 					}
 				}
-				result.push(mathPow(candidate, pow)*(maxWord+1)|0);
+				result.push(Math.pow(candidate, pow)*(maxWord+1)|0);
 				primes.push(candidate++);
 			}
 			return result;
@@ -38,7 +37,6 @@
 		while (ascii.length%64 - 56) ascii += '\x00';
 		while (ascii) {
 			var charCode = ascii.charCodeAt.bind(ascii);
-			// TODO: alias charCodeAt?
 			words.push(((charCode(0)*256 + charCode(1))*256 + charCode(2))*256 + charCode(3));
 			ascii = ascii.substring(4);
 		}
