@@ -79,10 +79,9 @@
 			byte = (byte&255).toString(16);
 			return (0 + byte).substring(byte.length - 1);
 		};
-		var wordToHex = function (word) {
+		return hash.map(function (word) {
 			return hex(word>>24) + hex(word>>16) + hex(word>>8) + hex(word);
-		};
-		return hash.map(wordToHex).join('');
+		}).join('');
 	}
 	
 	return sha256;
