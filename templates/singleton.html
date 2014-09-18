@@ -1,4 +1,9 @@
-<script>{{sha256.min.js}}{{extras/get-sync.min.js}}
-var g=get('https://api.github.com/gists/9089414'),c=JSON.parse(g).files['EventEmitter.js'].content;
-if (1||sha256(c)=='46751d11d1e3fd40b1e53d6b74f2cd51bf21cffef0e66b1f5ac023887de1a7c7') eval(c);
+<script>
+{{sha256.js}}
+
+// This is defined so that when you use this page to generate new pages, the app inserts the latest version of the JS code
+sha256.jsCode = {{json:sha256.min.js}};
+
+// Synchronously fetch full app code from Gist, check hash and execute
+var r=new XMLHttpRequest,c;r.open("GET","https://gist.githubusercontent.com/geraintluff/1e6c40419ec7793b5d9d/raw/3b48a379079469cd32ac9c79524ed003bdaf17f1/app.js",!1);r.send();c=r.responseText;if (sha256(c)=="9f9f1d5612d1a99e6f249055eb3a82d07860398e72fe63ed148ca0c27e83a829") eval(c);
 </script>

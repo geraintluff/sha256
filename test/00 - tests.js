@@ -1,5 +1,10 @@
+var fs = require('fs'), path = require('path');
+
 var api = require('../');
 var assert = require('chai').assert;
+
+var minified = require('fs').readFileSync(path.join(__dirname, '../sha256.min.js'), {encoding: 'utf-8'});
+var minifiedApi = (new Function ('return ' + minified))();
 
 describe('Examples:', function () {
 	var examplesHex = {
@@ -14,6 +19,10 @@ describe('Examples:', function () {
 		var expectedHex = examplesHex[key];
 		it(JSON.stringify(input.substring(0, 11)), function () {
 			var hex = api(input);
+			assert.equal(hex, expectedHex);
+		});
+		it('Minified: ' + JSON.stringify(input.substring(0, 11)), function () {
+			var hex = minifiedApi(input);
 			assert.equal(hex, expectedHex);
 		});
 	});

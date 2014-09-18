@@ -21,6 +21,7 @@ module.exports = function (grunt) {
 			main: {
 				options: {
 					report: 'min',
+					ASCIIOnly: true
 				},
 				files: {
 					'sha256.min.js': ['sha256.js'],
@@ -30,6 +31,12 @@ module.exports = function (grunt) {
 		}
 	});
 	
+	grunt.registerTask('hack-uglify', function () {
+		var fs = require('fs');
+		var code = fs.readFileSync('sha256.min.js', {encoding: 'utf-8'});
+		code = code.replace(/\u0080/g, '\\x80');
+		fs.writeFileSync('sha256.min.js', code);
+	});
 	grunt.registerTask('build', function () {
 		var fs = require('fs'), path = require('path');
 		fs.readdirSync('templates').forEach(function (filename) {
@@ -58,6 +65,6 @@ module.exports = function (grunt) {
 		console.log('Minified length: ' + code.length + ' bytes');
 	});
 	
-	grunt.registerTask('test', ['build', 'mochaTest', 'uglify']);
-	grunt.registerTask('default', ['test', 'measure', 'build']); // Yes, we build twice, because some of the builds might rely on the minified versions
+	grunt.registerTask('test', ['uglify', 'hack-uglify', 'build', 'mochaTest']);
+	grunt.registerTask('default', ['test', 'measure']);
 };
