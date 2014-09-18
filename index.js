@@ -9,14 +9,16 @@
 })(this, function () {
 	function sha256(ascii) {
 	var maxWord = 0xffffffff;
+	var lengthProperty = 'length';
+	
 	var rightRotate = function(value, amount) {
 		return (value>>>amount) | (value<<(32 - amount));
 	};
 	function constants(N, root) {
 		var primes = [], result = [];
 		var candidate = 2;
-		while (primes.length < N) {
-			for (var i = 0; i < primes.length; i++) {
+		while (primes[lengthProperty] < N) {
+			for (var i = 0; i < primes[lengthProperty]; i++) {
 				if (!(candidate%primes[i])) {
 					i = -1;
 					candidate++;
@@ -33,9 +35,9 @@
 	var k = (sha256.k = sha256.k || constants(64, 3));
 	
 	var words = [];
-	var asciiLength = ascii.length*8;
+	var asciiLength = ascii[lengthProperty]*8;
 	ascii += '\x80'; // Append '1' bit (plus zero padding)
-	while (ascii.length%64 - 56) ascii += '\x00'; // More zero padding
+	while (ascii[lengthProperty]%64 - 56) ascii += '\x00'; // More zero padding
 	while (ascii) {
 		var charCode = ascii.charCodeAt.bind(ascii);
 		words.push(((charCode(0)*256 + charCode(1))*256 + charCode(2))*256 + charCode(3));
@@ -45,7 +47,7 @@
 	words.push(asciiLength&maxWord)
 	
 	// process each chunk
-	while (words.length) {
+	while (words[lengthProperty]) {
 		var w = words.splice(0, 16);
 		// Expand the message into 64 words
 		for (var i = 16; i < 64; i++) {
@@ -75,7 +77,7 @@
 	}
 	
 	var result = '';
-	for (var i = 0; i < hash.length; i++) {
+	for (var i = 0; i < hash[lengthProperty]; i++) {
 		for (var j = 24; j >= 0; j -= 8) {
 			var b = (hash[i]>>j)&255;
 			result += ((b < 16) ? '0' : '') + b.toString(16);
