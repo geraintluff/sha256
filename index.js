@@ -7,7 +7,7 @@
 		global.sha256 = factory();
 	}
 })(this, function () {
-	function sha256(ascii) {
+	var sha256 = function sha256(ascii) { // The double declaration lets the function be renamed inside the scope, so caching constants is less expensive
 	var maxWord = 0xffffffff;
 	var lengthProperty = 'length';
 	var i; // Used as a counter across the whole file;
@@ -85,7 +85,7 @@
 		}
 	}
 	return result;
-}
+};
 	
 	return sha256;
 });

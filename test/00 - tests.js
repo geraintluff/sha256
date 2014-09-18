@@ -4,7 +4,7 @@ var api = require('../');
 var assert = require('chai').assert;
 
 var minified = require('fs').readFileSync(path.join(__dirname, '../sha256.min.js'), {encoding: 'utf-8'});
-var minifiedApi = (new Function ('return ' + minified))();
+var minifiedApi = (new Function (minified + 'return sha256;'))();
 
 describe('Examples:', function () {
 	var examplesHex = {
