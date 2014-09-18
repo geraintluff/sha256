@@ -7,7 +7,7 @@
 		global.sha256 = factory();
 	}
 })(this, function () {
-	var sha256 = function sha256(ascii) { // The double declaration lets the function be renamed inside the scope, so caching constants is less expensive
+	var sha256 = function sha256(ascii) { // The double declaration lets the function be renamed inside the scope, so caching constants is less expensive if we're doing it
 	var maxWord = 0xffffffff;
 	var lengthProperty = 'length';
 	var i; // Used as a counter across the whole file;
@@ -30,10 +30,14 @@
 		}
 		return result;
 	}
+	/* Caching of constants is disabled  - costs ~40% overhead when doing a single-round hash, but saves us 25 bytes
 	// Initial hash value: first 32 bits of the fractional parts of the square roots of the first 8 primes
 	var hash = (sha256.h = sha256.h || constants(8, 2)).slice(0);
 	// Round constants: first 32 bits of the fractional parts of the cube roots of the first 64 primes
 	var k = (sha256.k = sha256.k || constants(64, 3));
+	/*/
+	var hash = constants(8, 2), k = constants(64, 3);
+	//*/
 	
 	var words = [];
 	var asciiLength = ascii[lengthProperty]*8, charCode;

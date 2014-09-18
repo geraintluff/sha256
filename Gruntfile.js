@@ -31,6 +31,29 @@ module.exports = function (grunt) {
 		}
 	});
 	
+	grunt.registerTask('timing', function () {
+		[10, 1000, 100000].forEach(function (length) {
+			var crypto = require('crypto');
+			var randomBytes = crypto.randomBytes(length);
+			var string = '';
+			for (var i = 0; i < randomBytes.length; i++) {
+				string += String.fromCharCode(randomBytes[i]);
+			}
+		
+			var api = require('./');
+			var durationMs = 1000;
+			var start = Date.now(), iterations = 0;
+			while (Date.now() < start + durationMs) {
+				var hash = api(string);
+				iterations++;
+			}
+			var end = Date.now();
+		
+			var averageMs = Math.round((end - start)/iterations*1000)/1000;
+			console.log(string.length + '-character string: ' + averageMs + 'ms');
+		});
+	});
+	
 	grunt.registerTask('hack-uglify', function () {
 		var fs = require('fs');
 		var code = fs.readFileSync('sha256.min.js', {encoding: 'utf-8'});
@@ -66,5 +89,5 @@ module.exports = function (grunt) {
 	});
 	
 	grunt.registerTask('test', ['uglify', 'hack-uglify', 'build', 'mochaTest']);
-	grunt.registerTask('default', ['test', 'measure']);
+	grunt.registerTask('default', ['test', 'measure', 'timing']);
 };
