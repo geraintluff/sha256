@@ -42,7 +42,7 @@ module.exports = function (grunt) {
 		fs.readdirSync('templates').forEach(function (filename) {
 			if (filename.charAt(0) === '.') return;
 			var template = fs.readFileSync(path.join('templates', filename), {encoding: 'utf-8'});
-			var output = template.replace(/\{\{([^\:]+\:)?([^\{\}]+)\}\}/g, function (match, modifier, filename) {
+			var output = template.replace(/\{\{([^\:\{\}]+\:)?([^\{\}]+)\}\}/g, function (match, modifier, filename) {
 				var content = fs.readFileSync(filename, {encoding: 'utf-8'});
 				modifier = modifier && modifier.replace(':', '').toLowerCase();
 				if (modifier === 'html') {
