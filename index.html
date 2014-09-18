@@ -64,7 +64,7 @@
 				};
 			</script>
 			
-			<pre><code>var sha256 = function sha256(ascii) { // The double declaration lets the function be renamed inside the scope, so caching constants is less expensive if we&#39re doing it
+			<pre><code>function sha256(ascii) {
 	var maxWord = 0xffffffff;
 	var lengthProperty = &#39length&#39;
 	var i; // Used as a counter across the whole file;
