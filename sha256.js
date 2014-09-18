@@ -27,11 +27,11 @@ function sha256(ascii) {
 	var k = (sha256.k = sha256.k || constants(64, 3));
 	
 	var words = [];
-	var asciiLength = ascii[lengthProperty]*8;
+	var asciiLength = ascii[lengthProperty]*8, charCode;
 	ascii += '\x80'; // Append '1' bit (plus zero padding)
 	while (ascii[lengthProperty]%64 - 56) ascii += '\x00'; // More zero padding
 	while (ascii) {
-		var charCode = ascii.charCodeAt.bind(ascii);
+		charCode = ascii.charCodeAt.bind(ascii);
 		words.push(((charCode(0)*256 + charCode(1))*256 + charCode(2))*256 + charCode(3));
 		ascii = ascii.substring(4);
 	}
@@ -41,6 +41,7 @@ function sha256(ascii) {
 	// process each chunk
 	while (words[lengthProperty]) {
 		var w = words.splice(0, 16);
+		var working = hash.slice(0);
 		// Expand the message into 64 words
 		for (i = 16; i < 64; i++) {
 			var w15 = w[i - 15], w2 = w[i - 2];
@@ -49,7 +50,6 @@ function sha256(ascii) {
 			w[i] = (w[i - 16] + s0 + w[i - 7] + s1)|0;
 		}
 		
-		var working = hash.slice(0);
 		for (i = 0; i < 64; i++) {
 			var a = working[0], e = working[4];
 			var temp1 = working[7]
@@ -68,9 +68,9 @@ function sha256(ascii) {
 		}
 	}
 	
-	var result = '';
+	var result = '', j;
 	for (i = 0; i < hash[lengthProperty]; i++) {
-		for (var j = 24; j >= 0; j -= 8) {
+		for (j = 24; j >= 0; j -= 8) {
 			var b = (hash[i]>>j)&255;
 			result += ((b < 16) ? '0' : '') + b.toString(16);
 		}
