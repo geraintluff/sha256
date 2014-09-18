@@ -12,7 +12,7 @@
 	var rightRotate = function(value, amount) {
 		return (value>>>amount) | (value<<(32 - amount));
 	};
-	function constants(N, pow) {
+	function constants(N, root) {
 		var primes = [], result = [];
 		var candidate = 2;
 		while (primes.length < N) {
@@ -22,15 +22,15 @@
 					candidate++;
 				}
 			}
-			result.push((Math.pow(candidate, pow)*(maxWord+1))|0);
+			result.push((Math.pow(candidate, 1/root)*(maxWord+1))|0);
 			primes.push(candidate++);
 		}
 		return result;
 	}
 	// Initial hash value: first 32 bits of the fractional parts of the square roots of the first 8 primes
-	var hash = (sha256.h = sha256.h || constants(8, 1/2)).slice(0);
+	var hash = (sha256.h = sha256.h || constants(8, 2)).slice(0);
 	// Round constants: first 32 bits of the fractional parts of the cube roots of the first 64 primes
-	var k = (sha256.k = sha256.k || constants(64, 1/3));
+	var k = (sha256.k = sha256.k || constants(64, 3));
 	
 	var words = [];
 	var asciiLength = ascii.length*8;
@@ -74,13 +74,14 @@
 		}
 	}
 	
-	var hex = function (b) {
-		b = (b&255);
-		return ((b < 16) ? '0' : '') + b.toString(16);
-	};
-	return hash.map(function (word) {
-		return hex(word>>24) + hex(word>>16) + hex(word>>8) + hex(word);
-	}).join('');
+	var result = '';
+	for (var i = 0; i < hash.length; i++) {
+		for (var j = 24; j >= 0; j -= 8) {
+			var b = (hash[i]>>j)&255;
+			result += ((b < 16) ? '0' : '') + b.toString(16);
+		}
+	}
+	return result;
 }
 	
 	return sha256;
