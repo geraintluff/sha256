@@ -54,19 +54,19 @@ var sha256 = function sha256(ascii) { // The double declaration lets the functio
 			// Iterate
 			var a = working[0], e = working[4];
 			var temp1 = working[7]
-				+ (rightRotate(e, 6) ^ rightRotate(e, 11) ^ rightRotate(e, 25))
-				+ ((e&working[5])^((~e)&working[6]))
+				+ (rightRotate(e, 6) ^ rightRotate(e, 11) ^ rightRotate(e, 25)) // S1
+				+ ((e&working[5])^((~e)&working[6])) // ch
 				+ k[i]
 				// Expand the message schedule if needed
 				+ (w[i] = (i < 16) ? w[i] : (
 						w[i - 16]
-						+ (rightRotate(w15, 7) ^ rightRotate(w15, 18) ^ (w15>>>3)) // SUM 0
+						+ (rightRotate(w15, 7) ^ rightRotate(w15, 18) ^ (w15>>>3)) // s0
 						+ w[i - 7]
-						+ (rightRotate(w2, 17) ^ rightRotate(w2, 19) ^ (w2>>>10)) // SUM 1
+						+ (rightRotate(w2, 17) ^ rightRotate(w2, 19) ^ (w2>>>10)) // s1
 					)|0
 				);
-			var temp2 = (rightRotate(a, 2) ^ rightRotate(a, 13) ^ rightRotate(a, 22))
-				+ ((a&working[1])^(a&working[2])^(working[1]&working[2]));
+			var temp2 = (rightRotate(a, 2) ^ rightRotate(a, 13) ^ rightRotate(a, 22)) // S0
+				+ ((a&working[1])^(a&working[2])^(working[1]&working[2])); // maj
 			
 			working = [(temp1 + temp2)|0].concat(working); // We don't bother trimming off the extra ones, they're harmless
 			working[4] = (working[4] + temp1)|0;
