@@ -106,22 +106,27 @@
 	
 	// process each chunk
 	while (words[lengthProperty]) {
-		var w = words.splice(0, 16);
+		var w = words.splice(0, 16); // The message is expanded into 64 words as part of the iteration
 		var working = hash.slice(0);
-		// Expand the message into 64 words
-		for (i = 16; i &lt; 64; i++) {
-			var w15 = w[i - 15], w2 = w[i - 2];
-			var s0 = rightRotate(w15, 7) ^ rightRotate(w15, 18) ^ (w15>>>3);
-			var s1 = rightRotate(w2, 17) ^ rightRotate(w2, 19) ^ (w2>>>10);
-			w[i] = (w[i - 16] + s0 + w[i - 7] + s1)|0;
-		}
-		
 		for (i = 0; i &lt; 64; i++) {
+			// Expand the message into 64 words
+			// Used below if 
+			var w15 = w[i - 15], w2 = w[i - 2];
+
+			// Iterate
 			var a = working[0], e = working[4];
 			var temp1 = working[7]
 				+ (rightRotate(e, 6) ^ rightRotate(e, 11) ^ rightRotate(e, 25))
 				+ ((e&working[5])^((~e)&working[6]))
-				+ k[i] + w[i]
+				+ k[i]
+				// Expand the message schedule if needed
+				+ (w[i] = (i &lt; 16) ? w[i] : (
+						w[i - 16]
+						+ (rightRotate(w15, 7) ^ rightRotate(w15, 18) ^ (w15>>>3)) // SUM 0
+						+ w[i - 7]
+						+ (rightRotate(w2, 17) ^ rightRotate(w2, 19) ^ (w2>>>10)) // SUM 1
+					)|0
+				);
 			var temp2 = (rightRotate(a, 2) ^ rightRotate(a, 13) ^ rightRotate(a, 22))
 				+ ((a&working[1])^(a&working[2])^(working[1]&working[2]));
 			
