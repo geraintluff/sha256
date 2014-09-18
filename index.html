@@ -67,6 +67,7 @@
 			<pre><code>function sha256(ascii) {
 	var maxWord = 0xffffffff;
 	var lengthProperty = &#39length&#39;
+	var i; // Used as a counter across the whole file;
 	
 	var rightRotate = function(value, amount) {
 		return (value>>>amount) | (value&lt;&lt;(32 - amount));
@@ -75,7 +76,7 @@
 		var primes = [], result = [];
 		var candidate = 2;
 		while (primes[lengthProperty] &lt; N) {
-			for (var i = 0; i &lt; primes[lengthProperty]; i++) {
+			for (i = 0; i &lt; primes[lengthProperty]; i++) {
 				if (!(candidate%primes[i])) {
 					i = -1;
 					candidate++;
@@ -107,7 +108,7 @@
 	while (words[lengthProperty]) {
 		var w = words.splice(0, 16);
 		// Expand the message into 64 words
-		for (var i = 16; i &lt; 64; i++) {
+		for (i = 16; i &lt; 64; i++) {
 			var w15 = w[i - 15], w2 = w[i - 2];
 			var s0 = rightRotate(w15, 7) ^ rightRotate(w15, 18) ^ (w15>>>3);
 			var s1 = rightRotate(w2, 17) ^ rightRotate(w2, 19) ^ (w2>>>10);
@@ -115,7 +116,7 @@
 		}
 		
 		var working = hash.slice(0);
-		for (var i = 0; i &lt; 64; i++) {
+		for (i = 0; i &lt; 64; i++) {
 			var a = working[0], e = working[4];
 			var s1 = rightRotate(e, 6) ^ rightRotate(e, 11) ^ rightRotate(e, 25);
 			var ch = (e&working[5])^((~e)&working[6]);
@@ -128,13 +129,13 @@
 			working[4] = (working[4] + temp1)|0;
 		}
 		
-		for (var i = 0; i &lt; 8; i++) {
+		for (i = 0; i &lt; 8; i++) {
 			hash[i] = (hash[i] + working[i])|0;
 		}
 	}
 	
 	var result = &#39&#39;
-	for (var i = 0; i &lt; hash[lengthProperty]; i++) {
+	for (i = 0; i &lt; hash[lengthProperty]; i++) {
 		for (var j = 24; j >= 0; j -= 8) {
 			var b = (hash[i]>>j)&255;
 			result += ((b &lt; 16) ? &#390&#39 : &#39&#39) + b.toString(16);
