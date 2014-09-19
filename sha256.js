@@ -16,9 +16,11 @@ var sha256 = function sha256(ascii) {
 	var primes = [], mathPow = Math.pow;
 	var candidate = 2;
 	while (k[lengthProperty] < 64) {
-		for (i = 0; i < primes[lengthProperty]; i++) {
-			if (!(candidate%primes[i])) {
-				i = -1;
+		i = 0;
+		while (i < primes[lengthProperty]) {
+			if (!(candidate%primes[i++])) {
+				// candidate is composite - increase the candidate and reset the prime-comparison counter
+				i = 0;
 				candidate++;
 			}
 		}
