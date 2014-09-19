@@ -1,5 +1,5 @@
 var sha256 = function sha256(ascii) {
-	var maxWord = 0xffffffff;
+	var maxWord = 0x100000000;
 	var lengthProperty = 'length';
 	var i; // Used as a counter across the whole file;
 	
@@ -22,8 +22,8 @@ var sha256 = function sha256(ascii) {
 				candidate++;
 			}
 		}
-		hash.push((mathPow(candidate, .5)*(maxWord + 1))|0);
-		k.push((mathPow(candidate, 1/3)*(maxWord + 1))|0);
+		hash.push((mathPow(candidate, .5)*maxWord)|0);
+		k.push((mathPow(candidate, 1/3)*maxWord)|0);
 		primes.push(candidate++);
 	}
 	hash = hash.slice(0);
@@ -37,8 +37,8 @@ var sha256 = function sha256(ascii) {
 		words.push(((charCode(0)*256 + charCode(1))*256 + charCode(2))*256 + charCode(3));
 		ascii = ascii.substring(4);
 	}
-	words.push((asciiLength/(maxWord + 1))&maxWord);
-	words.push(asciiLength&maxWord)
+	words.push((asciiLength/maxWord)|0);
+	words.push(asciiLength|0)
 	
 	// process each chunk
 	while (words[lengthProperty]) {
