@@ -1,20 +1,24 @@
 var sha256 = function sha256(ascii) {
-	var maxWord = 0x100000000;
-	var lengthProperty = 'length', pushProperty = 'push';
-	var i; // Used as a counter across the whole file;
-	
-	var rightRotate = function(value, amount) {
+	function rightRotate(value, amount) {
 		return (value>>>amount) | (value<<(32 - amount));
 	};
 	
+	var maxWord = 0x100000000;
+	var lengthProperty = 'length', pushProperty = 'push';
+	var i, j; // Used as a counter across the whole file
+	var result = '';
+
+	var words = [];
+	var asciiLength = ascii[lengthProperty]*8, charCode;
+	
 	// Initial hash value: first 32 bits of the fractional parts of the square roots of the first 8 primes
-	// We actually calculate the first 64, but extra values are just ignored
+	// (we actually calculate the first 64, but extra values are just ignored)
 	var hash = sha256.h = sha256.h || [];
 	// Round constants: first 32 bits of the fractional parts of the cube roots of the first 64 primes
 	var k = sha256.k = sha256.k || [];
 
 	var primes = [], mathPow = Math.pow;
-	var candidate = 2;
+	var candidate = 2; // Our current candidate that we think might be a prime
 	while (k[lengthProperty] < 64) {
 		i = 0;
 		while (i < primes[lengthProperty]) {
@@ -30,8 +34,6 @@ var sha256 = function sha256(ascii) {
 	}
 	hash = hash.slice(0);
 	
-	var words = [];
-	var asciiLength = ascii[lengthProperty]*8, charCode;
 	ascii += '\x80'; // Append '1' bit (plus zero padding)
 	while (ascii[lengthProperty]%64 - 56) ascii += '\x00'; // More zero padding
 	while (ascii) {
@@ -78,7 +80,6 @@ var sha256 = function sha256(ascii) {
 		}
 	}
 	
-	var result = '', j;
 	for (i = 0; i < 8; i++) {
 		for (j = 24; j >= 0; j -= 8) {
 			var b = (hash[i]>>j)&255;
