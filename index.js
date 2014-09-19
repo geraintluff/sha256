@@ -20,7 +20,7 @@
 	var words = [];
 	var asciiLength = ascii[lengthProperty]*8, charCode;
 	
-	//* caching results is optional
+	//* caching results is optional - remove/add slash from front of this line to toggle
 	// Initial hash value: first 32 bits of the fractional parts of the square roots of the first 8 primes
 	// (we actually calculate the first 64, but extra values are just ignored)
 	var hash = sha256.h = sha256.h || [];
@@ -45,7 +45,6 @@
 		k[pushProperty]((mathPow(candidate, 1/3)*maxWord)|0);
 		primes[pushProperty](candidate++);
 	}
-	hash = hash.slice(0);
 	
 	ascii += '\x80'; // Append '1' bit (plus zero padding)
 	while (ascii[lengthProperty]%64 - 56) ascii += '\x00'; // More zero padding
@@ -60,17 +59,21 @@
 	// process each chunk
 	while (words[lengthProperty]) {
 		var w = words.splice(0, 16); // The message is expanded into 64 words as part of the iteration
-		var working = hash.slice(0);
+		var oldHash = hash;
+		// This is now the "working hash", often labelled as variables a...g
+		// (we have to truncate as well, otherwise extra entries at the end accumulate
+		hash = hash.slice(0, 8);
+		
 		for (i = 0; i < 64; i++) {
 			// Expand the message into 64 words
 			// Used below if 
 			var w15 = w[i - 15], w2 = w[i - 2];
 
 			// Iterate
-			var a = working[0], e = working[4];
-			var temp1 = working[7]
+			var a = hash[0], e = hash[4];
+			var temp1 = hash[7]
 				+ (rightRotate(e, 6) ^ rightRotate(e, 11) ^ rightRotate(e, 25)) // S1
-				+ ((e&working[5])^((~e)&working[6])) // ch
+				+ ((e&hash[5])^((~e)&hash[6])) // ch
 				+ k[i]
 				// Expand the message schedule if needed
 				+ (w[i] = (i < 16) ? w[i] : (
@@ -82,14 +85,14 @@
 				);
 			// This is only used once, so *could* be moved below, but it only saves 4 bytes and makes things unreadble
 			var temp2 = (rightRotate(a, 2) ^ rightRotate(a, 13) ^ rightRotate(a, 22)) // S0
-				+ ((a&working[1])^(a&working[2])^(working[1]&working[2])); // maj
+				+ ((a&hash[1])^(a&hash[2])^(hash[1]&hash[2])); // maj
 			
-			working = [(temp1 + temp2)|0].concat(working); // We don't bother trimming off the extra ones, they're harmless
-			working[4] = (working[4] + temp1)|0;
+			hash = [(temp1 + temp2)|0].concat(hash); // We don't bother trimming off the extra ones, they're harmless as long as we're truncating when we do the slice()
+			hash[4] = (hash[4] + temp1)|0;
 		}
 		
 		for (i = 0; i < 8; i++) {
-			hash[i] = (hash[i] + working[i])|0;
+			hash[i] = (hash[i] + oldHash[i])|0;
 		}
 	}
 	
