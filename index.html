@@ -73,30 +73,26 @@
 		return (value>>>amount) | (value&lt;&lt;(32 - amount));
 	};
 	
-	function constants(root) {
-		var primes = [], result = [];
-		var candidate = 2;
-		while (candidate &lt; 312) { // 64th prime is 311
-			for (i = 0; i &lt; primes[lengthProperty]; i++) {
-				if (!(candidate%primes[i])) {
-					i = -1;
-					candidate++;
-				}
-			}
-			result.push((Math.pow(candidate, 1/root)*(maxWord + 1))|0);
-			primes.push(candidate++);
-		}
-		return result;
-	}
-	//* Caching of constants is optional  - costs ~80% overhead when doing a single-round hash, but saves us 25 bytes
 	// Initial hash value: first 32 bits of the fractional parts of the square roots of the first 8 primes
 	// We actually calculate the first 64, but extra values are just ignored
-	var hash = (sha256.h = sha256.h || constants(2)).slice(0);
+	var hash = sha256.h = sha256.h || [];
 	// Round constants: first 32 bits of the fractional parts of the cube roots of the first 64 primes
-	var k = (sha256.k = sha256.k || constants(3));
-	/*/
-	var hash = constants(2), k = constants(3);
-	//*/
+	var k = sha256.k = sha256.k || [];
+
+	var primes = [], mathPow = Math.pow;
+	var candidate = 2;
+	while (k[lengthProperty] &lt; 64) {
+		for (i = 0; i &lt; primes[lengthProperty]; i++) {
+			if (!(candidate%primes[i])) {
+				i = -1;
+				candidate++;
+			}
+		}
+		hash.push((mathPow(candidate, .5)*(maxWord + 1))|0);
+		k.push((mathPow(candidate, 1/3)*(maxWord + 1))|0);
+		primes.push(candidate++);
+	}
+	hash = hash.slice(0);
 	
 	var words = [];
 	var asciiLength = ascii[lengthProperty]*8, charCode;
