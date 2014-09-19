@@ -1,4 +1,4 @@
-function sha256(ascii) {
+var sha256 = function sha256(ascii) {
 	var maxWord = 0xffffffff;
 	var lengthProperty = 'length';
 	var i; // Used as a counter across the whole file;
@@ -6,28 +6,30 @@ function sha256(ascii) {
 	var rightRotate = function(value, amount) {
 		return (value>>>amount) | (value<<(32 - amount));
 	};
-	function constants(N, root) {
+	
+	function constants(root) {
 		var primes = [], result = [];
 		var candidate = 2;
-		while (primes[lengthProperty] < N) {
+		while (candidate < 312) { // 64th prime is 311
 			for (i = 0; i < primes[lengthProperty]; i++) {
 				if (!(candidate%primes[i])) {
 					i = -1;
 					candidate++;
 				}
 			}
-			result.push((Math.pow(candidate, 1/root)*(maxWord+1))|0);
+			result.push((Math.pow(candidate, 1/root)*(maxWord + 1))|0);
 			primes.push(candidate++);
 		}
 		return result;
 	}
-	/* Caching of constants is disabled  - costs ~40% overhead when doing a single-round hash, but saves us 25 bytes
+	//* Caching of constants is optional  - costs ~80% overhead when doing a single-round hash, but saves us 25 bytes
 	// Initial hash value: first 32 bits of the fractional parts of the square roots of the first 8 primes
-	var hash = (sha256.h = sha256.h || constants(8, 2)).slice(0);
+	// We actually calculate the first 64, but extra values are just ignored
+	var hash = (sha256.h = sha256.h || constants(2)).slice(0);
 	// Round constants: first 32 bits of the fractional parts of the cube roots of the first 64 primes
-	var k = (sha256.k = sha256.k || constants(64, 3));
+	var k = (sha256.k = sha256.k || constants(3));
 	/*/
-	var hash = constants(8, 2), k = constants(64, 3);
+	var hash = constants(2), k = constants(3);
 	//*/
 	
 	var words = [];
@@ -65,6 +67,7 @@ function sha256(ascii) {
 						+ (rightRotate(w2, 17) ^ rightRotate(w2, 19) ^ (w2>>>10)) // s1
 					)|0
 				);
+			// This is only used once, so *could* be moved below, but it only saves 4 bytes and makes things unreadble
 			var temp2 = (rightRotate(a, 2) ^ rightRotate(a, 13) ^ rightRotate(a, 22)) // S0
 				+ ((a&working[1])^(a&working[2])^(working[1]&working[2])); // maj
 			
@@ -78,7 +81,7 @@ function sha256(ascii) {
 	}
 	
 	var result = '', j;
-	for (i = 0; i < hash[lengthProperty]; i++) {
+	for (i = 0; i < 8; i++) {
 		for (j = 24; j >= 0; j -= 8) {
 			var b = (hash[i]>>j)&255;
 			result += ((b < 16) ? '0' : '') + b.toString(16);
