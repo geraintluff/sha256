@@ -1,6 +1,6 @@
 var sha256 = function sha256(ascii) {
 	var maxWord = 0x100000000;
-	var lengthProperty = 'length';
+	var lengthProperty = 'length', pushProperty = 'push';
 	var i; // Used as a counter across the whole file;
 	
 	var rightRotate = function(value, amount) {
@@ -22,9 +22,9 @@ var sha256 = function sha256(ascii) {
 				candidate++;
 			}
 		}
-		hash.push((mathPow(candidate, .5)*maxWord)|0);
-		k.push((mathPow(candidate, 1/3)*maxWord)|0);
-		primes.push(candidate++);
+		hash[pushProperty]((mathPow(candidate, .5)*maxWord)|0);
+		k[pushProperty]((mathPow(candidate, 1/3)*maxWord)|0);
+		primes[pushProperty](candidate++);
 	}
 	hash = hash.slice(0);
 	
@@ -34,11 +34,11 @@ var sha256 = function sha256(ascii) {
 	while (ascii[lengthProperty]%64 - 56) ascii += '\x00'; // More zero padding
 	while (ascii) {
 		charCode = ascii.charCodeAt.bind(ascii);
-		words.push(((charCode(0)*256 + charCode(1))*256 + charCode(2))*256 + charCode(3));
+		words[pushProperty](((charCode(0)*256 + charCode(1))*256 + charCode(2))*256 + charCode(3));
 		ascii = ascii.substring(4);
 	}
-	words.push((asciiLength/maxWord)|0);
-	words.push(asciiLength|0)
+	words[pushProperty]((asciiLength/maxWord)|0);
+	words[pushProperty](asciiLength|0)
 	
 	// process each chunk
 	while (words[lengthProperty]) {
