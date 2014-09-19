@@ -24,8 +24,7 @@ module.exports = function (grunt) {
 					ASCIIOnly: true
 				},
 				files: {
-					'sha256.min.js': ['sha256.js'],
-					'extras/get-sync.min.js': ['extras/get-sync.js']
+					'sha256.min.js': ['sha256.js']
 				}
 			}
 		}
@@ -86,6 +85,11 @@ module.exports = function (grunt) {
 		var fs = require('fs');
 		var code = fs.readFileSync('sha256.min.js');
 		console.log('Minified length: ' + code.length + ' bytes');
+		var packageInfo = fs.readFileSync('package.json', {encoding: 'utf-8'});
+		packageInfo = packageInfo.replace(/("description":.*?)([0-9]+)( bytes)/, function (match, start, byteCount, end) {
+			return start + code.length + end;
+		});
+		fs.writeFileSync('package.json', packageInfo);
 	});
 	
 	grunt.registerTask('test', ['uglify', 'hack-uglify', 'build', 'mochaTest']);

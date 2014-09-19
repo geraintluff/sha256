@@ -1,12 +1,12 @@
 {
-  "name": "sha256",
+  "name": "tiny-sha256",
   "version": "0.0.0",
-  "description": "SHA-256, as small as I can make it",
+  "description": "SHA-256 in 875 bytes (minified)",
   "main": "index.js",
   "scripts": {
     "test": "grunt test"
   },
-  "author": "ARM Ltd.",
+  "author": "Geraint Luff",
   "license": "all rights reserved",
   "devDependencies": {
     "chai": "~1.9.1",
