@@ -20,11 +20,15 @@
 	var words = [];
 	var asciiLength = ascii[lengthProperty]*8, charCode;
 	
+	//* caching results is optional
 	// Initial hash value: first 32 bits of the fractional parts of the square roots of the first 8 primes
 	// (we actually calculate the first 64, but extra values are just ignored)
 	var hash = sha256.h = sha256.h || [];
 	// Round constants: first 32 bits of the fractional parts of the cube roots of the first 64 primes
 	var k = sha256.k = sha256.k || [];
+	/*/
+	var hash = [], k = [];
+	//*/
 
 	var primes = [], mathPow = Math.pow;
 	var candidate = 2; // Our current candidate that we think might be a prime
