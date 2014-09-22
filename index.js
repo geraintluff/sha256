@@ -12,7 +12,8 @@
 		return (value>>>amount) | (value<<(32 - amount));
 	};
 	
-	var maxWord = 0x100000000;
+	var mathPow = Math.pow;
+	var maxWord = mathPow(2, 32);
 	var lengthProperty = 'length', pushProperty = 'push';
 	var i, j; // Used as a counter across the whole file
 	var result = '';
@@ -26,32 +27,27 @@
 	var hash = sha256.h = sha256.h || [];
 	// Round constants: first 32 bits of the fractional parts of the cube roots of the first 64 primes
 	var k = sha256.k = sha256.k || [];
+	var primeCounter = k[lengthProperty];
 	/*/
 	var hash = [], k = [];
+	var primeCounter = 0;
 	//*/
 
-	var primes = [], mathPow = Math.pow;
-	var candidate = 2; // Our current candidate that we think might be a prime
-	while (k[lengthProperty] < 64) {
-		i = 0;
-		while (i < primes[lengthProperty]) {
-			if (!(candidate%primes[i++])) {
-				// candidate is composite - increase the candidate and reset the prime-comparison counter
-				i = 0;
-				candidate++;
+	var isComposite = {};
+	for (var candidate = 2; primeCounter < 64; candidate++) {
+		if (!isComposite[candidate]) {
+			for (i = 0; i < 313; i += candidate) {
+				isComposite[i] = candidate;
 			}
+			hash[primeCounter] = (mathPow(candidate, .5)*maxWord)|0;
+			k[primeCounter++] = (mathPow(candidate, 1/3)*maxWord)|0;
 		}
-		hash[pushProperty]((mathPow(candidate, .5)*maxWord)|0);
-		k[pushProperty]((mathPow(candidate, 1/3)*maxWord)|0);
-		primes[pushProperty](candidate++);
 	}
 	
 	ascii += '\x80'; // Append '1' bit (plus zero padding)
 	while (ascii[lengthProperty]%64 - 56) ascii += '\x00'; // More zero padding
-	while (ascii) {
-		charCode = ascii.charCodeAt.bind(ascii);
-		words[pushProperty](((charCode(0)*256 + charCode(1))*256 + charCode(2))*256 + charCode(3));
-		ascii = ascii.substring(4);
+	for (i = 0; i < ascii[lengthProperty]; i++) {
+		words[i>>2] |= ascii.charCodeAt(i) << ((3 - i)%4)*8;
 	}
 	words[pushProperty]((asciiLength/maxWord)|0);
 	words[pushProperty](asciiLength|0)
