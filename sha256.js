@@ -10,7 +10,7 @@ var sha256 = function sha256(ascii) {
 	var result = '';
 
 	var words = [];
-	var asciiLength = ascii[lengthProperty]*8, charCode;
+	var asciiLength = ascii[lengthProperty]*8;
 	
 	//* caching results is optional - remove/add slash from front of this line to toggle
 	// Initial hash value: first 32 bits of the fractional parts of the square roots of the first 8 primes
