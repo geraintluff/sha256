@@ -50,8 +50,12 @@
 		<div id="content">
 			<h1>JavaScript SHA-256 demo</h1>
 
-			<p>This is a JavaScript implementation of SHA-256, aiming to be as small as I can make it - the minified version is <a href="sha256.min.js">only a kilobyte</a>.<p>
-			<p>It only supports ASCII, so if you need to hash Unicode text you'll need to write a decoder.</p>
+			<p>This is a JavaScript implementation of SHA-256, aiming to be as small as I can make it.  The goals are:</p>
+			<ul>
+				<li>small size- the minified version is <a href="sha256.min.js">less than a kilobyte</a></li>
+				<li>readability - the unminified version should be relatively easy to understand
+			</ul>
+			<p>It currently only supports ASCII, so if you need to hash Unicode text you'll need to write a decoder.</p>
 			
 			<script src="sha256.min.js"></script>
 			<textarea id="input" rows=5>abc</textarea>
