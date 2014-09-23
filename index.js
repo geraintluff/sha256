@@ -101,7 +101,9 @@ var sha256 = function sha256(ascii) {
 	}
 	return result;
 };
-	
+
+sha256.code = "var sha256=function a(b){function c(a,b){return a>>>b|a<<32-b}for(var d,e,f=Math.pow,g=f(2,32),h=\"length\",i=\"push\",j=\"\",k=[],l=8*b[h],m=a.h=a.h||[],n=a.k=a.k||[],o=n[h],p={},q=2;64>o;q++)if(!p[q]){for(d=0;313>d;d+=q)p[d]=q;m[o]=f(q,.5)*g|0,n[o++]=f(q,1/3)*g|0}for(b+=\"\\x80\";b[h]%64-56;)b+=\"\\x00\";for(d=0;d<b[h];d++)k[d>>2]|=b.charCodeAt(d)<<(3-d)%4*8;for(k[i](l/g|0),k[i](0|l);k[h];){var r=k.splice(0,16),s=m;for(m=m.slice(0,8),d=0;64>d;d++){var t=r[d-15],u=r[d-2],v=m[0],w=m[4],x=m[7]+(c(w,6)^c(w,11)^c(w,25))+(w&m[5]^~w&m[6])+n[d]+(r[d]=16>d?r[d]:r[d-16]+(c(t,7)^c(t,18)^t>>>3)+r[d-7]+(c(u,17)^c(u,19)^u>>>10)|0),y=(c(v,2)^c(v,13)^c(v,22))+(v&m[1]^v&m[2]^m[1]&m[2]);m=[x+y|0].concat(m),m[4]=m[4]+x|0}for(d=0;8>d;d++)m[d]=m[d]+s[d]|0}for(d=0;8>d;d++)for(e=24;e>=0;e-=8){var z=m[d]>>e&255;j+=(16>z?\"0\":\"\")+z.toString(16)}return j};";
+
 return sha256;
 
 });

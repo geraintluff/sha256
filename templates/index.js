@@ -9,7 +9,9 @@
 })(this, function () {
 
 {{sha256.js}}
-	
+
+sha256.code = {{json:sha256.min.js}};
+
 return sha256;
 
 });

@@ -85,11 +85,18 @@ module.exports = function (grunt) {
 		var fs = require('fs');
 		var code = fs.readFileSync('sha256.min.js');
 		console.log('Minified length: ' + code.length + ' bytes');
+		// update byte count in package.json
 		var packageInfo = fs.readFileSync('package.json', {encoding: 'utf-8'});
 		packageInfo = packageInfo.replace(/("description":.*?)([0-9]+)( bytes)/, function (match, start, byteCount, end) {
 			return start + code.length + end;
 		});
 		fs.writeFileSync('package.json', packageInfo);
+		// update byte count in README
+		var readme = fs.readFileSync('README.md', {encoding: 'utf-8'});
+		readme = readme.replace(/(only )([0-9]+)( bytes)/, function (match, start, byteCount, end) {
+			return start + code.length + end;
+		});
+		fs.writeFileSync('README.md', readme);
 	});
 	
 	grunt.registerTask('test', ['uglify', 'hack-uglify', 'build', 'mochaTest']);

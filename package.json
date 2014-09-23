@@ -7,7 +7,7 @@
     "test": "grunt test"
   },
   "author": "Geraint Luff",
-  "license": "all rights reserved",
+  "license": "Public domain",
   "devDependencies": {
     "chai": "~1.9.1",
     "grunt": "~0.4.5",
