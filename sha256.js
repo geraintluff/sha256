@@ -38,7 +38,9 @@ var sha256 = function sha256(ascii) {
 	ascii += '\x80'; // Append '1' bit (plus zero padding)
 	while (ascii[lengthProperty]%64 - 56) ascii += '\x00'; // More zero padding
 	for (i = 0; i < ascii[lengthProperty]; i++) {
-		words[i>>2] |= ascii.charCodeAt(i) << ((3 - i)%4)*8;
+		j = ascii.charCodeAt(i);
+		if (j>>8) return; // ASCII check: only accept characters in range 0-255
+		words[i>>2] |= j << ((3 - i)%4)*8;
 	}
 	words[pushProperty]((asciiLength/maxWord)|0);
 	words[pushProperty](asciiLength|0)

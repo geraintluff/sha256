@@ -108,7 +108,9 @@
 	ascii += &#39\x80&#39; // Append &#391&#39 bit (plus zero padding)
 	while (ascii[lengthProperty]%64 - 56) ascii += &#39\x00&#39; // More zero padding
 	for (i = 0; i &lt; ascii[lengthProperty]; i++) {
-		words[i>>2] |= ascii.charCodeAt(i) &lt;&lt; ((3 - i)%4)*8;
+		j = ascii.charCodeAt(i);
+		if (j>>8) return; // ASCII check: only accept characters in range 0-255
+		words[i>>2] |= j &lt;&lt; ((3 - i)%4)*8;
 	}
 	words[pushProperty]((asciiLength/maxWord)|0);
 	words[pushProperty](asciiLength|0)
