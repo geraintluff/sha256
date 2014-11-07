@@ -10,7 +10,7 @@ var sha256 = function sha256(ascii) {
 	var result = '';
 
 	var words = [];
-	var asciiLength = ascii[lengthProperty]*8;
+	var asciiBitLength = ascii[lengthProperty]*8;
 	
 	//* caching results is optional - remove/add slash from front of this line to toggle
 	// Initial hash value: first 32 bits of the fractional parts of the square roots of the first 8 primes
@@ -42,12 +42,11 @@ var sha256 = function sha256(ascii) {
 		if (j>>8) return; // ASCII check: only accept characters in range 0-255
 		words[i>>2] |= j << ((3 - i)%4)*8;
 	}
-	words[pushProperty]((asciiLength/maxWord)|0);
-	words[pushProperty](asciiLength|0)
+	words[pushProperty]((asciiBitLength/maxWord)|0);
+	words[pushProperty](asciiBitLength)
 	
 	// process each chunk
-	j = 0;
-	while (j < words[lengthProperty]) {
+	for (j = 0; j < words[lengthProperty];) {
 		var w = words.slice(j, j += 16); // The message is expanded into 64 words as part of the iteration
 		var oldHash = hash;
 		// This is now the "working hash", often labelled as variables a...g
@@ -88,8 +87,8 @@ var sha256 = function sha256(ascii) {
 	}
 	
 	for (i = 0; i < 8; i++) {
-		for (j = 24; j >= 0; j -= 8) {
-			var b = (hash[i]>>j)&255;
+		for (j = 3; j + 1; j--) {
+			var b = (hash[i]>>(j*8))&255;
 			result += ((b < 16) ? 0 : '') + b.toString(16);
 		}
 	}

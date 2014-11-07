@@ -20,7 +20,7 @@ var sha256 = function sha256(ascii) {
 	var result = '';
 
 	var words = [];
-	var asciiLength = ascii[lengthProperty]*8;
+	var asciiBitLength = ascii[lengthProperty]*8;
 	
 	//* caching results is optional - remove/add slash from front of this line to toggle
 	// Initial hash value: first 32 bits of the fractional parts of the square roots of the first 8 primes
@@ -52,12 +52,11 @@ var sha256 = function sha256(ascii) {
 		if (j>>8) return; // ASCII check: only accept characters in range 0-255
 		words[i>>2] |= j << ((3 - i)%4)*8;
 	}
-	words[pushProperty]((asciiLength/maxWord)|0);
-	words[pushProperty](asciiLength|0)
+	words[pushProperty]((asciiBitLength/maxWord)|0);
+	words[pushProperty](asciiBitLength)
 	
 	// process each chunk
-	j = 0;
-	while (j < words[lengthProperty]) {
+	for (j = 0; j < words[lengthProperty];) {
 		var w = words.slice(j, j += 16); // The message is expanded into 64 words as part of the iteration
 		var oldHash = hash;
 		// This is now the "working hash", often labelled as variables a...g
@@ -98,8 +97,8 @@ var sha256 = function sha256(ascii) {
 	}
 	
 	for (i = 0; i < 8; i++) {
-		for (j = 24; j >= 0; j -= 8) {
-			var b = (hash[i]>>j)&255;
+		for (j = 3; j + 1; j--) {
+			var b = (hash[i]>>(j*8))&255;
 			result += ((b < 16) ? 0 : '') + b.toString(16);
 		}
 	}
@@ -107,7 +106,7 @@ var sha256 = function sha256(ascii) {
 };
 
 
-sha256.code = "var sha256=function a(b){function c(a,b){return a>>>b|a<<32-b}for(var d,e,f=Math.pow,g=f(2,32),h=\"length\",i=\"push\",j=\"\",k=[],l=8*b[h],m=a.h=a.h||[],n=a.k=a.k||[],o=n[h],p={},q=2;64>o;q++)if(!p[q]){for(d=0;313>d;d+=q)p[d]=q;m[o]=f(q,.5)*g|0,n[o++]=f(q,1/3)*g|0}for(b+=\"\\x80\";b[h]%64-56;)b+=\"\\x00\";for(d=0;d<b[h];d++){if(e=b.charCodeAt(d),e>>8)return;k[d>>2]|=e<<(3-d)%4*8}for(k[i](l/g|0),k[i](0|l),e=0;e<k[h];){var r=k.slice(e,e+=16),s=m;for(m=m.slice(0,8),d=0;64>d;d++){var t=r[d-15],u=r[d-2],v=m[0],w=m[4],x=m[7]+(c(w,6)^c(w,11)^c(w,25))+(w&m[5]^~w&m[6])+n[d]+(r[d]=16>d?r[d]:r[d-16]+(c(t,7)^c(t,18)^t>>>3)+r[d-7]+(c(u,17)^c(u,19)^u>>>10)|0),y=(c(v,2)^c(v,13)^c(v,22))+(v&m[1]^v&m[2]^m[1]&m[2]);m=[x+y|0].concat(m),m[4]=m[4]+x|0}for(d=0;8>d;d++)m[d]=m[d]+s[d]|0}for(d=0;8>d;d++)for(e=24;e>=0;e-=8){var z=m[d]>>e&255;j+=(16>z?0:\"\")+z.toString(16)}return j};";
+sha256.code = "var sha256=function a(b){function c(a,b){return a>>>b|a<<32-b}for(var d,e,f=Math.pow,g=f(2,32),h=\"length\",i=\"push\",j=\"\",k=[],l=8*b[h],m=a.h=a.h||[],n=a.k=a.k||[],o=n[h],p={},q=2;64>o;q++)if(!p[q]){for(d=0;313>d;d+=q)p[d]=q;m[o]=f(q,.5)*g|0,n[o++]=f(q,1/3)*g|0}for(b+=\"\\x80\";b[h]%64-56;)b+=\"\\x00\";for(d=0;d<b[h];d++){if(e=b.charCodeAt(d),e>>8)return;k[d>>2]|=e<<(3-d)%4*8}for(k[i](l/g|0),k[i](l),e=0;e<k[h];){var r=k.slice(e,e+=16),s=m;for(m=m.slice(0,8),d=0;64>d;d++){var t=r[d-15],u=r[d-2],v=m[0],w=m[4],x=m[7]+(c(w,6)^c(w,11)^c(w,25))+(w&m[5]^~w&m[6])+n[d]+(r[d]=16>d?r[d]:r[d-16]+(c(t,7)^c(t,18)^t>>>3)+r[d-7]+(c(u,17)^c(u,19)^u>>>10)|0),y=(c(v,2)^c(v,13)^c(v,22))+(v&m[1]^v&m[2]^m[1]&m[2]);m=[x+y|0].concat(m),m[4]=m[4]+x|0}for(d=0;8>d;d++)m[d]=m[d]+s[d]|0}for(d=0;8>d;d++)for(e=3;e+1;e--){var z=m[d]>>8*e&255;j+=(16>z?0:\"\")+z.toString(16)}return j};";
 
 return sha256;
 
