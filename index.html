@@ -158,7 +158,7 @@
 	for (i = 0; i &lt; 8; i++) {
 		for (j = 24; j >= 0; j -= 8) {
 			var b = (hash[i]>>j)&255;
-			result += ((b &lt; 16) ? &#390&#39 : &#39&#39) + b.toString(16);
+			result += ((b &lt; 16) ? 0 : &#39&#39) + b.toString(16);
 		}
 	}
 	return result;

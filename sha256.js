@@ -88,7 +88,7 @@ var sha256 = function sha256(ascii) {
 	for (i = 0; i < 8; i++) {
 		for (j = 24; j >= 0; j -= 8) {
 			var b = (hash[i]>>j)&255;
-			result += ((b < 16) ? '0' : '') + b.toString(16);
+			result += ((b < 16) ? 0 : '') + b.toString(16);
 		}
 	}
 	return result;
