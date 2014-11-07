@@ -31,7 +31,7 @@ module.exports = function (grunt) {
 	});
 	
 	grunt.registerTask('timing', function () {
-		[10, 1000, 100000].forEach(function (length) {
+		[10, 1000, 100000, 10000000].forEach(function (length) {
 			var crypto = require('crypto');
 			var randomBytes = crypto.randomBytes(length);
 			var string = '';
