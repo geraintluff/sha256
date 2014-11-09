@@ -1,7 +1,7 @@
 {
   "name": "tiny-sha256",
-  "version": "1.0.0",
-  "description": "SHA-256 in 854 bytes (minified)",
+  "version": "1.0.2",
+  "description": "SHA-256 in 849 bytes (minified)",
   "main": "index.js",
   "scripts": {
     "test": "grunt test"

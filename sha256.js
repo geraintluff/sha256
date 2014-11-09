@@ -5,7 +5,7 @@ var sha256 = function sha256(ascii) {
 	
 	var mathPow = Math.pow;
 	var maxWord = mathPow(2, 32);
-	var lengthProperty = 'length', pushProperty = 'push';
+	var lengthProperty = 'length';
 	var i, j; // Used as a counter across the whole file
 	var result = '';
 
@@ -42,8 +42,8 @@ var sha256 = function sha256(ascii) {
 		if (j>>8) return; // ASCII check: only accept characters in range 0-255
 		words[i>>2] |= j << ((3 - i)%4)*8;
 	}
-	words[pushProperty]((asciiBitLength/maxWord)|0);
-	words[pushProperty](asciiBitLength)
+	words[words[lengthProperty]] = ((asciiBitLength/maxWord)|0);
+	words[words[lengthProperty]] = (asciiBitLength)
 	
 	// process each chunk
 	for (j = 0; j < words[lengthProperty];) {

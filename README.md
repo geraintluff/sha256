@@ -1,7 +1,7 @@
 # A small SHA-256 implementation for JavaScript
 
 The goals of this project are:
-* small size  - the minified version is only 854 bytes
+* small size  - the minified version is only 849 bytes
 * readability - the unminified code should be relatively easy to understand/review
 
 Input must be an ASCII string - if character codes outside the range 0-255 are received, `undefined` is returned.
